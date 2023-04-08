@@ -1,38 +1,63 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Using Cloud Storage
 
-## Getting Started
+Intro: Cloud storage is the industry standard way of saving / downloading images and there are a lot of services our there. The good news is that interacting with their api is about the same for every service.
+First step is to pick a service. For CSCI 5117 I would probably stick with one these two options:
 
-First, run the development server:
+-   Google Cloud Storage (Free 5gb, requires you to enter a credit card)
+-   Backblaze B2 (Free 10gb, no credit card!)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+We'll go through using Backblaze B2 since they give us more storage and don't require us to enter a credit card to get their 10gb for free.
+There are a couple of operations and terms that we need to get familiar with before we begin.
+
+-   Buckets: An independent file structure. Usually you have one bucket for one purpose. For a web app that has users upload a single image we only need one bucket to store those images. Buckets can have folders so each user can get their own folder.
+-   Authorization: Our web app will authorize users, but when interacting with a cloud storage service we need to authenticate our web app. This is done through a series of IDs and API keys that we will generate and keep secret in our web app.
+
+With those two major terms defined let's jump into our first operation.
+
+### 1. Service Setup
+
+First we have to setup our account. This is kind of a process and really boring so we'll move quickly.
+
+1. Create an account at [backblaze.com](https://www.backblaze.com/)
+2. We will need our master key to be able to interact with Backblaze through their CLI and through code. To get get your key ![Backblaze Master key creation](./images/backblaze_master_key.png)
+   From here you will need to keep 2 things. First is the keyID it generates. Second is the masterKeyValue. Copy both of these and keep them save.
+3. Download the Backblaze CLI:
+
+    1. Windows: `wget https://github.com/Backblaze/B2_Command_Line_Tool/releases/latest/download/b2-windows.exe`
+    2. Linux: `wget https://github.com/Backblaze/B2_Command_Line_Tool/releases/latest/download/b2-linux`
+    3. Mac: `brew install b2-tools`
+
+    Full info can be found here: [Get Backblaze CLI](https://www.backblaze.com/b2/docs/quick_command_line.html)
+
+4. Use the shell script I wrote to create a bucket with browser upload permissions. If we were doing everything from a backend, this step would not be a lot simpler but since we are uploading through a browser we need to setup custom permissions on our bucket.
+
+    1. First open the `create-bucket.sh` file so we can edit the things we need. First update the `b2` command to match your operating systems so either `b2-windows`, `b2-linux` or `b2-tools` for mac. This script must be run from the same directory as where you have the CLI downloaded. At the end of the script you'll see `<bucket-name>` and you should edit that to be the name you want the bucket.
+    2. Run the script with `./create-bucket.sh` and if you're logged in, everything should work! In terminal it will paste your bucketId at the top. You MUST save this for later. So copy it and paste it with your other keys.
+
+    That should do it for Backblaze setup! We're ready to move onto Codehooks backend so our frontend can get the api details it needs to upload images.
+
+### 2. Service Level Authentication
+
+If you looked closely at the `create-bucket` script you'll notice we only gave access to a few commands. `b2_download_file_by_id`, `b2_download_file_by_name`, `b2_upload_file`, `b2_upload_part`. These are the only api endpoints Backblaze lets the browser perform. Therefore, all authentication and detail fetching needs to happen on Codehooks. We'll write a pretty standard endpoint for authorizing and getting our upload URL. First important note is that Node.js does NOT have the fetch api by default so we will need to install that with.
+
+```
+npm install node-fetch
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then at the top of our `index.js` in our Codehooks backend we must have this line:
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+```
+import fetch from 'node-fetch'
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+Now we can do fetch requests just like we can on the frontend!
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Let's write a function that will give our web app the needed Backblaze authentication details.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### 3. Getting Our Upload URL
 
-## Learn More
+### 4. Front-End Upload
 
-To learn more about Next.js, take a look at the following resources:
+### 5. Downloading
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### 6. (Optional) Deleting

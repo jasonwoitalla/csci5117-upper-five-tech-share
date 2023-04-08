@@ -3,12 +3,6 @@ import { useCloudUpload } from "@/hooks/useCloudStorage";
 import { useEffect } from "react";
 
 function cloudStorage() {
-    useEffect(() => {
-        console.log("Environment variables:");
-        console.log(process.env.API_URL);
-        console.log(process.env.API_KEY);
-    }, []);
-
     async function uploadImage(e) {
         e.preventDefault();
 
