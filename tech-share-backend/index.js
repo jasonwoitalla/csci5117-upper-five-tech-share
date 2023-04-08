@@ -1,4 +1,6 @@
 import { app } from "codehooks-js";
+import {crudlify} from 'codehooks-crudlify'
+import { object, string } from 'yup';
 
 async function getAuthDetails() {
     console.log("Getting Backblaze auth details");
@@ -49,4 +51,10 @@ app.get("/upload-cloud-storage", async (req, res) => {
     });
 });
 
+const imageYup = object({ // json data validation
+    name: string().required(),
+    content: string().required(),
+})
+
+crudlify(app, {image: imageYup})
 export default app.init();
