@@ -1,3 +1,21 @@
+# Image upload/manipulation and Storage
+
+## Problem: 
+- We need to build an app that allow users to upload their image
+- How do you allow user to upload their image
+- How do you manipulate image? 
+- HOW do we store data? 
+
+## WE GOT ANSEWER 
+#### Architecture Overview
+![Tech Share (1)](https://user-images.githubusercontent.com/65479968/230800447-d9de666f-94ec-40c1-b0ae-cd4c9645068c.png)
+
+Just copy and paste our code for your own need for the project
+
+## 1. Image Uploading
+
+## 2. Image Resizing  / Image manipulation 
+
 ## Using Cloud Storage
 
 Intro: Cloud storage is the industry standard way of saving / downloading images and there are a lot of services our there. The good news is that interacting with their api is about the same for every service.
@@ -61,3 +79,19 @@ Let's write a function that will give our web app the needed Backblaze authentic
 ### 5. Downloading
 
 ### 6. (Optional) Deleting
+
+## Pros / Cons
+### Pros / Cons: Base64 
+Pros: Light Weight / Easy to integrate into existing web applications
+Cons: Inefficient, but for larger images it can be more efficient that making http request
+Industry example: Google images
+
+### Pros / Cons: Cloud
+Pros: Faster and more efficient. Scalable and reliable. 
+Cons: Requires additional set up and maintenance. 
+Industry example: 
+
+### When to use
+Base64: 
+Cloud: 
+
