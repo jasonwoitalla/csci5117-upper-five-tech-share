@@ -1,7 +1,8 @@
 # Image upload/manipulation and Storage
 
 ## Problem: 
-- We need to build an app that allow users to upload their image
+- You need to build an app that allow users to upload their image
+### Question that might arise
 - How do you allow user to upload their image
 - How do you manipulate image? 
 - HOW do we store data? 
