@@ -14,7 +14,7 @@ function Gallery() {
 
         console.log("Finishing upload");
     }
-    
+
     const webcamRef = useRef(null)
     const [image, setImage] = useState(null)
     const capture = useCallback(() => {
@@ -23,8 +23,16 @@ function Gallery() {
     }, [webcamRef, setImage])
 
     async function uploadScreenshot() { 
-        image && await useCloudUpload(image)
-        console.log("Finishing upload") 
+        if (image) {
+            //convert the base64 image to a blob: https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+            console.log(image)
+            const byteCharacters = atob(image.split(",")[1])
+            const byteNumbers = new Array(byteCharacters.length)
+            for (let i = 0; i < byteCharacters.length; i++) byteNumbers[i] = byteCharacters.charCodeAt(i)
+            const byteArray = new Uint8Array(byteNumbers)
+            const blobImage = new Blob([byteArray], {type: "image/jpeg"})
+            blobImage && await useCloudUpload(blobImage)
+        } 
     }
 
     return (
