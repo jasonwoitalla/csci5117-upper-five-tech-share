@@ -122,9 +122,85 @@ We will get a JSON object back that has a new `resData.authorizationToken` and t
 
 ### 4. Front-End Upload
 
+To upload a file we can use our upload url and use this api call: [Uploading a File](https://www.backblaze.com/b2/docs/b2_upload_file.html)
+
+There are a few required headers that we need to provide to this call for our upload to be successful.
+
+-   Authorization: the new auth token from `b2_get_upload_url`
+-   X-Bz-File-Name: what we want to name this file in our cloud storage
+-   Content-Type: the mime type of the file, we can use `b2/auto` to get it automatically
+-   Content-Length: the number of bytes in this file
+-   X-Bz-Content-Sha1: A checksum hash so the server can make sure you file uploaded correctly and fully
+
+We already have Authorization from our previous call, and Content-Type can be left as `b2/auto` to use the file's file extension. X-Bz-File-Name and Content-Length are easy to get from a blob object simply use `blob.name` and `blob.size`. The harder and more involved header is the X-Bz-Content-Sha1 for this we will use the CryptoJS package:
+
+```
+npm install crypto-js
+```
+
+To get the Sha1 hash a blob object we can use the following code:
+
+```
+import Hex from "crypto-js/enc-hex";
+import SHA1 from "crypto-js/sha1";
+import WordArray from "crypto-js/lib-typedarrays"
+
+const reader = new FileReader();
+reader.addEventListener("loadend", (e) => {
+    const checksum = SHA1(WordArray.create(reader.result)).toString(Hex);
+});
+reader.readAsArrayBuffer(myBlobObject);
+```
+
+We know have all the pieces we need to upload a file!
+
+```
+const upload = await fetch(`${CODEHOOKS_API_URL}/get_upload_data`);
+const uploadData = await upload.json();
+const uploadUrl = uploadData.uploadUrl
+const authorizationToken = uploadData.authorizationToken
+
+fetch(uploadUrl, {
+    method: "POST",
+    headers: {
+        "Authorization": authorizationToken,
+        "Content-Type": "b2/auto",
+        "Content-Length": myBlobObject.size,
+        "X-Bz-File-Name": myBlobObject.name,
+        "X-Bz-Content-Sha1": checksum,
+    },
+    body: myBlobObject
+});
+```
+
+We'll want to look at the response object from this fetch request. It has a `resData.fileId` property that we can store in our database for download!
+
 ### 5. Downloading
 
+Now that we have our file saved in Backblaze and we have the `fileId` of our uploaded file, it's very simple to download. One of the returned values from our `getAuthDetails` function is a `downloadUrl` property. We can use that URL to use the `b2_download_file_by_id` API call. Here is a very simple fetch request as an example:
+
+```
+fetch(`${CODEBLOCKS_API_URL}/get_donwload_url`)
+    .then((res) => res.json())
+    .then((data) => {
+        fetch(`${data.downloadUrl}/b2api/v2/b2_download_file_by_id?fileId=${id}`, {
+            method: "GET",
+            headers: {
+                Authorization: data.auth,
+            },
+        }).then((res) => res.json())
+        .then((data) => {
+            const blobData = await data.blob()
+            return URL.createObjectURL(blob);
+        })
+    });
+```
+
+It's that simple! To explain the code a little more, we first get the download URL from codehooks. If we already have the ID of the file we don't need to get anything else, otherwise we can ask for it from the codehooks database. Then make a fetch request to the download file api, pass in the file id, and convert the binary result into a usable Javascript Blob object.
+
 ### 6. (Optional) Deleting
+
+Deleting is very similar and can be done by following the [Backblze Delete FIle API](https://www.backblaze.com/b2/docs/b2_delete_file_version.html)
 
 ## Pros / Cons
 
