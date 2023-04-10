@@ -4,13 +4,37 @@ import { useCloudUpload } from "@/hooks/useCloudStorage";
 import GalleryGrid from "@/components/gallery-grid";
 import { useState, useEffect, useRef, useCallback } from "react";
 import Webcam from "react-webcam";
+import Resizer from "react-image-file-resizer";
 
 function Gallery() {
     async function handleImageUpload(e) {
         e.preventDefault();
 
         const img = document.getElementById("imageField").files[0];
-        await useCloudUpload(img);
+
+        try {
+            const resized = await new Promise((resolve) => {
+                Resizer.imageFileResizer(
+                    img,
+                    600,
+                    600,
+                    'JPEG',
+                    100,
+                    0,
+                    (uri) => {
+                    resolve(uri);
+                    },
+                    'file',
+                    200,
+                    200
+              );
+            });
+            
+            await useCloudUpload(resized);
+
+          } catch (error) {
+            console.log('Error while resizing image:', error);
+          }
 
         console.log("Finishing upload");
     }
