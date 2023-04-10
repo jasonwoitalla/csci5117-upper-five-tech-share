@@ -8,6 +8,9 @@ function Gallery() {
         e.preventDefault();
 
         const image = document.getElementById("imageField").files[0];
+
+        // resize stuff
+
         await useCloudUpload(image);
 
         console.log("Finishing upload");

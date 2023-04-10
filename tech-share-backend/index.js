@@ -1,15 +1,12 @@
 import { app } from "codehooks-js";
-<<<<<<< HEAD
-import {crudlify} from 'codehooks-crudlify'
-import { object, string } from 'yup';
-=======
+import { crudlify } from "codehooks-crudlify";
+import { object, string } from "yup";
 import { Datastore } from "codehooks-js";
 import fetch from "node-fetch";
 
 const B2_ACCOUNT_ID = process.env.B2_ACCOUNT_ID;
 const B2_KEY = process.env.B2_KEY;
 const B2_BUCKET_ID = process.env.B2_BUCKET_ID;
->>>>>>> b6ed95b73f8ce7d69af6472223b7b6943b72dd04
 
 async function getAuthDetails() {
     console.log("Getting Backblaze auth details");
@@ -69,14 +66,6 @@ app.get("/upload-cloud-storage", async (req, res) => {
     });
 });
 
-<<<<<<< HEAD
-const imageYup = object({ // json data validation
-    name: string().required(),
-    content: string().required(),
-})
-
-crudlify(app, {image: imageYup})
-=======
 app.get("/download-url-cloud-storage", async (req, res) => {
     let authDetails = await getAuthDetails();
 
@@ -97,5 +86,12 @@ app.get("/get-all-images", async (req, res) => {
     conn.getMany("images").json(res);
 });
 
->>>>>>> b6ed95b73f8ce7d69af6472223b7b6943b72dd04
+const imageYup = object({
+    // json data validation
+    name: string().required(),
+    content: string().required(),
+});
+
+crudlify(app, { image: imageYup });
+
 export default app.init();
