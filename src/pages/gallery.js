@@ -18,9 +18,9 @@ function Gallery() {
     const webcamRef = useRef(null)
     const [image, setImage] = useState(null)
     const capture = useCallback(() => {
-        const imageSrc = webcamRef.current.getScreenshot()
-        setImage(imageSrc)
-    }, [webcamRef, setImage])
+        const imageSrc = webcamRef.current.getScreenshot();
+        setImage(imageSrc);
+    }, [webcamRef, setImage]);
 
     async function uploadScreenshot() { 
         if (image) {
@@ -55,11 +55,22 @@ function Gallery() {
                         </p>
                         <ImageUploadForm onSubmit={handleImageUpload} />
                         <h2 className="title is-4 mt-4">Screenshot Widget</h2>
-                        <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
-                        {image && ( <img src={image} /> )}
+                        <Webcam
+                            audio={false}
+                            ref={webcamRef}
+                            screenshotFormat="image/jpeg"
+                        />
+                        {image && <img src={image} />}
                         <div className="container">
-                            <button onClick={capture} className="button">Get Screenshot</button>
-                            <button onClick={uploadScreenshot} className="button">Upload Screenshot to Gallery</button>
+                            <button onClick={capture} className="button">
+                                Get Screenshot
+                            </button>
+                            <button
+                                onClick={uploadScreenshot}
+                                className="button"
+                            >
+                                Upload Screenshot to Gallery
+                            </button>
                         </div>
                         <h2 className="title is-4 mt-4">Gallery</h2>
                         <GalleryGrid />

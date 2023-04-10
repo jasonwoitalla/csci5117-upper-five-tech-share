@@ -1,23 +1,28 @@
 # Image upload/manipulation and Storage
 
-## Problem: 
-- You need to build an app that allow users to upload their image
-### Question that might arise
-- How do you allow user to upload their image
-- How do you manipulate image? 
-- HOW do we store data? 
+## Problem:
 
-## WE GOT ANSEWER 
+-   You need to build an app that allow users to upload their image
+
+### Question that might arise
+
+-   How do you allow user to upload their image
+-   How do you manipulate image?
+-   HOW do we store data?
+
+## WE GOT ANSEWER
+
 #### Architecture Overview
+
 ![Tech Share (1)](https://user-images.githubusercontent.com/65479968/230800447-d9de666f-94ec-40c1-b0ae-cd4c9645068c.png)
 
 Just copy and paste our code for your own need for the project
 
 ## 1. Image Uploading
 
-## 2. Image Resizing  / Image manipulation 
+## 2. Image Resizing / Image manipulation
 
-## Using Cloud Storage
+## 4. Using Cloud Storage
 
 Intro: Cloud storage is the industry standard way of saving / downloading images and there are a lot of services our there. The good news is that interacting with their api is about the same for every service.
 First step is to pick a service. For CSCI 5117 I would probably stick with one these two options:
@@ -55,6 +60,8 @@ First we have to setup our account. This is kind of a process and really boring 
 
     That should do it for Backblaze setup! We're ready to move onto Codehooks backend so our frontend can get the api details it needs to upload images.
 
+(**Note** Service setup for Google Cloud is very similar. You must create an account through their console and create a bucket. You then must get their CLI to set the CORS rules. The guide is here: [Google Cloud CORS Setup](https://cloud.google.com/storage/docs/using-cors#console))
+
 ### 2. Service Level Authentication
 
 If you looked closely at the `create-bucket` script you'll notice we only gave access to a few commands. `b2_download_file_by_id`, `b2_download_file_by_name`, `b2_upload_file`, `b2_upload_part`. These are the only api endpoints Backblaze lets the browser perform. Therefore, all authentication and detail fetching needs to happen on Codehooks. We'll write a pretty standard endpoint for authorizing and getting our upload URL. First important note is that Node.js does NOT have the fetch api by default so we will need to install that with.
@@ -71,9 +78,47 @@ import fetch from 'node-fetch'
 
 Now we can do fetch requests just like we can on the frontend!
 
-Let's write a function that will give our web app the needed Backblaze authentication details.
+Let's write a function that will give our web app the needed Backblaze authentication details. This is an operation that happens every time we want to interact with our cloud storage service so let's put this in a function. Following the api documentation we can use this api to get auth details: [Backblaze B2 Auth Details](https://www.backblaze.com/b2/docs/b2_authorize_account.html).
+
+First we must encode our account id and key then we can perform our fetch request:
+
+```
+let encoded = Buffer.from(ACCOUNT_ID + ":" + ACCOUNT_KEY).toString("base64");
+const response = await fetch("https://api.backblazeb2.com/b2api/v2/b2_authorize_account", {
+    method: "GET",
+    headers: {
+        Authorization: "Basic " + encoded,
+    },
+});
+```
+
+The result here will give us a JSON object that has all the information we need. Mainly what we need is `resData.authorizationToken` and `resData.apiUrl`. That is the URL we need to make API requests and the token we need to pass for those requests to succeed.
+
+With our web app authorized and access to the needed information we can now actually use our service!
+
+(**Google Cloud Setup** A similar process happens for google cloud. While you can setup your buckets to accept anonymous uploads, if you wish to have verified uploads you can recreate the steps above by following [API Authentication with Google Cloud Storage](https://cloud.google.com/docs/authentication/api-keys))
 
 ### 3. Getting Our Upload URL
+
+Okay, now our backend is authorized to make API requests to Backblaze. There are several API requests that are of interest to us, they are:
+
+-   [b2_get_upload_url](https://www.backblaze.com/b2/docs/b2_get_upload_url.html)
+-   [b2_upload_file](https://www.backblaze.com/b2/docs/b2_upload_file.html)
+-   [b2_download_file_by_id](https://www.backblaze.com/b2/docs/b2_download_file_by_id.html)
+
+Those last 2 can be done in the browser so we will do that. The `b2_get_upload_url` request can not happen in the browser so we have to do it on the backend. Here is the fetch request for that:
+
+```
+authDetails = await getAuthDetails();
+const response = await fetch(`${authDetails.apiUrl}//b2api/v2/b2_get_upload_url?buckedId=${BUCKET_ID}`, {
+    method: "GET",
+    headers: {
+        Authorization: authDetails.authToken
+    }
+});
+```
+
+We will get a JSON object back that has a new `resData.authorizationToken` and the much needed `resData.uploadUrl`. Pass both of those values to the front-end so the browser can perform the upload for us!
 
 ### 4. Front-End Upload
 
@@ -82,17 +127,20 @@ Let's write a function that will give our web app the needed Backblaze authentic
 ### 6. (Optional) Deleting
 
 ## Pros / Cons
-### Pros / Cons: Base64 
+
+### Pros / Cons: Base64
+
 Pros: Light Weight / Easy to integrate into existing web applications
 Cons: Inefficient, but for larger images it can be more efficient that making http request
 Industry example: Google images
 
 ### Pros / Cons: Cloud
-Pros: Faster and more efficient. Scalable and reliable. 
-Cons: Requires additional set up and maintenance. 
-Industry example: 
+
+Pros: Faster and more efficient. Scalable and reliable.
+Cons: Requires additional set up and maintenance.
+Industry example:
 
 ### When to use
-Base64: 
-Cloud: 
 
+Base64:
+Cloud:
