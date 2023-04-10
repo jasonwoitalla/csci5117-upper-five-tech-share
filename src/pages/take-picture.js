@@ -9,7 +9,10 @@ function takePicture() {
         const imageSrc = webcamRef.current.getScreenshot()
         setImage(imageSrc)
     }, [webcamRef, setImage])
-    async function uploadScreenshot() { await useCloudUpload(image) }
+    async function uploadScreenshot() { 
+        image && await useCloudUpload(image)
+        console.log("Finishing upload") 
+    }
 
     return ( 
         <>
