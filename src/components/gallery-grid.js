@@ -9,34 +9,34 @@ function GalleryGrid() {
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        async function fetchImages() {
-            const res = await fetch(`${apiUrl}/get-all-images`, {
-                method: "GET",
-                headers: {
-                    "x-api-key": apiKey,
-                },
+    async function fetchImages() {
+        const res = await fetch(`${apiUrl}/get-all-images`, {
+            method: "GET",
+            headers: {
+                "x-api-key": apiKey,
+            },
+        });
+        const data = await res.json();
+        console.log("Images: " + JSON.stringify(data));
+
+        let images = [];
+        for (let i = 0; i < data.length; i++) {
+            const src = await useCloudDownload(data[i].id);
+            images.push({
+                imgName: data[i].name,
+                id: data[i]._id,
+                src: src,
+                key: data[i]._id,
             });
-            const data = await res.json();
-            console.log("Images: " + JSON.stringify(data));
-
-            let images = [];
-            for (let i = 0; i < data.length; i++) {
-                const src = await useCloudDownload(data[i].id);
-                images.push({
-                    imgName: data[i].name,
-                    id: data[i]._id,
-                    src: src,
-                    key: data[i]._id,
-                });
-            }
-
-            console.log("Processed Images: " + JSON.stringify(images));
-
-            setImages(images);
-            setLoading(false);
         }
 
+        console.log("Processed Images: " + JSON.stringify(images));
+
+        setImages(images);
+        setLoading(false);
+    }
+
+    useEffect(() => {
         fetchImages();
     }, []);
 

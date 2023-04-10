@@ -81,7 +81,6 @@ app.post("/upload-cloud-storage-id", async (req, res) => {
 
 app.get("/get-all-images", async (req, res) => {
     const conn = await Datastore.open();
-
     conn.getMany("images").json(res);
 });
 
