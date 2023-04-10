@@ -17,6 +17,7 @@ function takePicture() {
     return ( 
         <>
             <div className="section">
+                <h1 className="title">Screenshot</h1>
                 <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
                 {image && ( <img src={image} /> )}
                 <div className="container">
