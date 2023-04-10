@@ -11,13 +11,16 @@ function takePicture() {
     }, [webcamRef, setImage])
     async function uploadScreenshot() { await useCloudUpload(image) }
 
-    return 
-    ( 
+    return ( 
         <>
-            <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
-            <button onClick={capture}>Get Screenshot</button>
-            {image && ( <img src={image} /> )}
-            <button onClick={uploadScreenshot}>Upload Screenshot to Gallery</button>
+            <div className="section">
+                <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
+                {image && ( <img src={image} /> )}
+                <div className="container">
+                    <button onClick={capture} className="button">Get Screenshot</button>
+                    <button onClick={uploadScreenshot} className="button">Upload Screenshot to Gallery</button>
+                </div>
+            </div>
         </>
     )
 }
