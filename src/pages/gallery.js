@@ -2,17 +2,28 @@ import ImageUploadForm from "@/components/image-upload-form";
 import Head from "next/head";
 import { useCloudUpload } from "@/hooks/useCloudStorage";
 import GalleryGrid from "@/components/gallery-grid";
+import { useState, useEffect, useRef, useCallback } from "react";
+import Webcam from "react-webcam";
 
 function Gallery() {
     async function handleImageUpload(e) {
         e.preventDefault();
 
-        const image = document.getElementById("imageField").files[0];
+        const img = document.getElementById("imageField").files[0];
+        await useCloudUpload(img);
 
-        // resize stuff
+        console.log("Finishing upload");
+    }
 
-        await useCloudUpload(image);
+    const webcamRef = useRef(null);
+    const [image, setImage] = useState(null);
+    const capture = useCallback(() => {
+        const imageSrc = webcamRef.current.getScreenshot();
+        setImage(imageSrc);
+    }, [webcamRef, setImage]);
 
+    async function uploadScreenshot() {
+        image && (await useCloudUpload(image));
         console.log("Finishing upload");
     }
 
@@ -35,6 +46,24 @@ function Gallery() {
                             Backblaze S2.
                         </p>
                         <ImageUploadForm onSubmit={handleImageUpload} />
+                        <h2 className="title is-4 mt-4">Screenshot Widget</h2>
+                        <Webcam
+                            audio={false}
+                            ref={webcamRef}
+                            screenshotFormat="image/jpeg"
+                        />
+                        {image && <img src={image} />}
+                        <div className="container">
+                            <button onClick={capture} className="button">
+                                Get Screenshot
+                            </button>
+                            <button
+                                onClick={uploadScreenshot}
+                                className="button"
+                            >
+                                Upload Screenshot to Gallery
+                            </button>
+                        </div>
                         <h2 className="title is-4 mt-4">Gallery</h2>
                         <GalleryGrid />
                     </div>
