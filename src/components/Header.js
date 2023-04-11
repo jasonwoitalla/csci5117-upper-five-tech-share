@@ -24,8 +24,11 @@ function Header() {
 
                 <div id="navbarBasicExample" className="navbar-menu">
                     <div className="navbar-start">
+                        <Link href="/" className="navbar-item">
+                            Home
+                        </Link>
                         <Link href="/gallery" className="navbar-item">
-                            File Upload / Webcam
+                            Gallery Demo Page
                         </Link>
                         <Link href="/process-photo" className="navbar-item">
                             Resize Picture
