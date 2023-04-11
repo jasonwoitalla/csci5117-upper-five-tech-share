@@ -1,3 +1,39 @@
+/*
+ * CLOUD STORAGE TABLE OF CONTENTS
+ *
+ * Things the front-end can do: uplaod, download, delete
+ * Things the front-end can't do: authorize accounts, get upload urls, get download urls
+ *
+ * Chapter 0. The setup
+ *
+ * 0.1. Create a B2 account
+ * 0.2. Create a bucket
+ * 0.3. Setup the CORS rules for the bucket
+ * 0.4. Create an application key
+ *
+ * Chapter 1. The back-end
+ *
+ * 1.1. Authorize the account
+ *  - This is done by making a request to the B2 API
+ *  - We must pass in our application key and application id encoded in Base64
+ *
+ * 1.2. Get the upload URL
+ *  - This is done by making a request to the B2 API
+ *  - We must pass in our authorization token and the bucket id
+ *
+ * Chapter 2. The front-end
+ *
+ * 2.1. Upload the file
+ *  - This is done by making a request to the upload URL
+ *  - B2 needs some information about our file to process the upload
+ *  - Information needed: file name, file size, file type, file checksum
+ *  - Returns an ID that we can use for download
+ *
+ * 2.2. Download the file
+ *  - This is done by making a request to the download URL
+ *  - We can use the file ID we got to download it
+ */
+
 import Hex from "crypto-js/enc-hex";
 import SHA1 from "crypto-js/sha1";
 import WordArray from "crypto-js/lib-typedarrays";
