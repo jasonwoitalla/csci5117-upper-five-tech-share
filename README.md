@@ -4,11 +4,16 @@
 
 -   You need to build an app that allow users to upload their image
 
-### Question that might arise
+Ex) <br/> 
+Project 2: Online wardrobe, Pen tracker <br/> 
+Industry: Social Media (Instagram), Online marketplace (ebay), etc
 
--   How do you allow user to upload their image
--   How do you manipulate image?
--   HOW do we store data?
+Booktalk gave us a AWESOME presentation for uploading images
+
+### HOWEVER... 
+### Question that might arise
+-   How do you manipulate image??? 
+-   How do we STORE data??? 
 
 ## WE GOT ANSEWER
 
@@ -247,17 +252,18 @@ Deleting is very similar and can be done by following the [Backblze Delete FIle 
 
 ### Pros / Cons: Base64
 
-Pros: Light Weight / Easy to integrate into existing web applications
-Cons: Inefficient, but for larger images it can be more efficient that making http request
-Industry example: Google images
+#### Pros: Light Weight / Easy to integrate into existing web applications
+#### Cons: Inefficient, but for larger images it can be more efficient that making http request
 
 ### Pros / Cons: Cloud
 
-Pros: Faster and more efficient. Scalable and reliable.
-Cons: Requires additional set up and maintenance.
-Industry example:
+#### Pros: Faster and more efficient. Scalable and reliable.
+#### Cons: Requires additional set up and maintenance.
+
 
 ### When to use
 
-Base64:
-Cloud:
+- Cloud: Default 
+- Base64: For small thumbnails/images
+
+HOWEVER, for this project you should be fine just by using Base 64. 

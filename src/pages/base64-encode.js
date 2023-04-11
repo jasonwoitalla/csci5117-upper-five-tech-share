@@ -4,7 +4,7 @@ import styles from "@/styles/Home.module.css"
 
 function base64Encode() {
 
-    const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT;
+    const API_ENDPOINT = process.env.NEXT_PUBLIC_API_URL;
     const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
     const dataFetchedRef = useRef(false);
     const buttonClicked = useRef(false);
