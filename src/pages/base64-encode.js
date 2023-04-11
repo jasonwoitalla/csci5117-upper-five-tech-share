@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import ImageUploadForm from "@/components/image-upload-form";
+import styles from "@/styles/Home.module.css"
 
 function base64Encode() {
 
@@ -60,7 +61,6 @@ function base64Encode() {
         const upload_imaged = fileInput.files[0];
         let reader = new FileReader();
         reader.onloadend = function() {
-            setImageName(e.target.name.value);
             setDataUrl(reader.result);
             buttonClicked.current = true;
         }
@@ -68,8 +68,19 @@ function base64Encode() {
     }
 
     return <>
-    <ImageUploadForm onSubmit={process_and_upload}></ImageUploadForm>
-    {dataFetchedRef.current && <img src={content} alt="Base64 uploaded" width="500"/>}
+    <h1 className={`${styles.heading} ${styles.margins}`}>Uploading a base64Encoded Image</h1>
+    <div className={`container ${styles.margins}`}>
+        <div className="notification is-primary">
+            <p>Enter name of image:</p>
+            <input type="text" id="file-name" required onChange={(e)=> setImageName(e.target.value)}></input>
+            <p>Select a file to upload:</p>
+            <ImageUploadForm onSubmit={process_and_upload}></ImageUploadForm>
+            {dataFetchedRef.current && <>
+                <p>Image from the database</p>
+                <img src={content} alt="Base64 uploaded" width="500"/>
+            </>}
+        </div>
+    </div>
     </>;
 }
 
