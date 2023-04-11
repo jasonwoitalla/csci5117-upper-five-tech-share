@@ -57,6 +57,37 @@ export async function useCloudUpload(file) {
     reader.readAsArrayBuffer(file);
 }
 
+export async function useCloudDownloadLatest() {
+    // 1. Get the download url
+    const downloadRes = await fetch(`${CODEHOOKS_URL}/get_download_url`, {
+        method: "GET",
+        headers: {
+            "x-api-key": CODEHOOKS_KEY,
+        },
+    });
+    const downloadData = await downloadRes.json();
+
+    // 2. Get the file ID and download URL from the server
+    const res = await fetch(`${CODEHOOKS_URL}/get_all_images`, {
+        method: "GET",
+        headers: {
+            "x-api-key": CODEHOOKS_KEY,
+        },
+    });
+    const resData = await res.json();
+    let latestId = resData[resData.length - 1].id;
+
+    // 2. Build our download urls
+    const downloadUrl = `${downloadData.downloadUrl}/b2api/v2/b2_download_file_by_id?fileId=${latestId}`;
+
+    // 3. Fetch request for each download url
+    const response = await fetch(downloadUrl);
+    const blob = await response.blob();
+    const src = URL.createObjectURL(blob);
+
+    return src;
+}
+
 export async function useCloudDownloads(downloadUrls) {
     const dataPromises = downloadUrls.map((url) => fetch(url));
     const data = await Promise.all(dataPromises);

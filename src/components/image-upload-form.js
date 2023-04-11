@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as styles from "./image-upload-form.module.scss";
 
-function ImageUploadForm({ onSubmit }) {
+function ImageUploadForm({ onSubmit, reset }) {
     const [fileUpload, setFileUpload] = useState("Choose an image...");
 
     function handleFileOnChange(e) {
         setFileUpload(e.target.files[0].name);
     }
+
+    useEffect(() => {
+        setFileUpload("Choose an image...");
+    }, [reset]);
 
     return (
         <div>
