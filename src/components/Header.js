@@ -24,7 +24,7 @@ function Header() {
 
                 <div id="navbarBasicExample" className="navbar-menu">
                     <div className="navbar-start">
-                        <Link href="/take-picture" className="navbar-item">
+                        <Link href="/gallery" className="navbar-item">
                             File Upload / Webcam
                         </Link>
                         <Link href="/process-photo" className="navbar-item">
