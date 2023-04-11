@@ -1,44 +1,73 @@
 import { useState, useEffect } from "react";
-import { useCloudDownload } from "@/hooks/useCloudStorage";
+import { useCloudDownloads } from "@/hooks/useCloudStorage";
 import Image from "next/image";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+const CODEHOOKS_URL = process.env.NEXT_PUBLIC_API_URL;
+const CODEHOOKS_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
-function GalleryGrid() {
+function GalleryGrid({ refresh, page = 1, displayNum = 100 }) {
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(true);
 
     async function fetchImages() {
-        const res = await fetch(`${apiUrl}/get-all-images`, {
+        setLoading(true);
+        setImages([]);
+
+        // 1. Fetch the download url from the backend
+        const response = await fetch(`${CODEHOOKS_URL}/get_download_url`, {
             method: "GET",
             headers: {
-                "x-api-key": apiKey,
+                "x-api-key": CODEHOOKS_KEY,
             },
         });
-        const data = await res.json();
-        console.log("Images: " + JSON.stringify(data));
+        const downloadData = await response.json();
 
-        let images = [];
-        for (let i = 0; i < data.length; i++) {
-            const src = await useCloudDownload(data[i].id);
-            images.push({
-                imgName: data[i].name,
-                id: data[i]._id,
-                src: src,
-                key: data[i]._id,
+        // 2. Fetch the image details from the database
+        console.log(`${CODEHOOKS_URL}/get_all_images`);
+        fetch(`${CODEHOOKS_URL}/get_all_images`, {
+            method: "GET",
+            headers: {
+                "x-api-key": CODEHOOKS_KEY,
+            },
+        })
+            .then((res) => res.json())
+            .then(async (files) => {
+                console.log("Finished downloading everything");
+
+                // Pagination
+                const start = (page - 1) * displayNum;
+                const end = start + displayNum;
+                files = files.slice(start, end);
+
+                const urlArray = [];
+                files.forEach((file) => {
+                    urlArray.push(
+                        `${downloadData.downloadUrl}/b2api/v2/b2_download_file_by_id?fileId=${file.id}`
+                    );
+                });
+                let myImages = [];
+                const srcFiles = await useCloudDownloads(urlArray);
+                srcFiles.forEach((srcFile, index) => {
+                    myImages.push({
+                        imgName: files[index].name,
+                        id: files[index]._id,
+                        src: srcFile,
+                        key: files[index]._id,
+                    });
+
+                    setLoading(false);
+                    setImages(myImages);
+                });
             });
-        }
-
-        console.log("Processed Images: " + JSON.stringify(images));
-
-        setImages(images);
-        setLoading(false);
     }
 
     useEffect(() => {
         fetchImages();
     }, []);
+
+    useEffect(() => {
+        fetchImages();
+    }, [refresh]);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -47,13 +76,13 @@ function GalleryGrid() {
     if (images.length > 0) {
         let imageChunks = [];
         for (let i = 0; i < images.length; i += 3) {
-            imageChunks.push(images.slice(i, i + 3));
+            imageChunks.push({ images: images.slice(i, i + 3), key: i });
         }
 
         return (
             <div className="columns is-multiline mt-4">
                 {imageChunks.map((chunk) => {
-                    return chunk.map((image) => {
+                    return chunk.images.map((image) => {
                         return (
                             <div className="column is-one-third">
                                 <div className="card">

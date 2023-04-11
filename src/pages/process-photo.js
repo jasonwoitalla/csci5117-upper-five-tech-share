@@ -25,10 +25,17 @@ function processPhoto() {
     };
 
     return (
-        <div>
-            <input type="file" onChange={handleImageChange} /> <br />
-            {originalImage && <img src={originalImage} alt="Original" />}
-            {resizedImage && <img src={resizedImage} alt="Resized" />}
+        <div className="section">
+            <div className="container">
+                <input
+                    
+                    type="file"
+                    onChange={handleImageChange}
+                />{" "}
+                <br />
+                {originalImage && <img src={originalImage} alt="Original" />}
+                {resizedImage && <img src={resizedImage} alt="Resized" />}
+            </div>
         </div>
     );
 }

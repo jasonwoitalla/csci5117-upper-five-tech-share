@@ -14,21 +14,23 @@ function cloudStorage() {
     }
 
     return (
-        <>
-            <h1>Example of Cloud Storage</h1>
-            <p>
-                First we have a form where the user can upload an image. Since
-                we're using FaaS and our backend can not support files being
-                sent to it, we will need to handle everything on the frontend.
-                The first step to using a cloud storage solution is to validate
-                that the client can actually upload images. This is something
-                that happens at the start of every session. This authorization
-                process has sensitive information so it will be handled on our
-                backend.
-            </p>
-            <h2>File Upload Form</h2>
-            <ImageUploadForm onSubmit={uploadImage} />
-        </>
+        <div className="section">
+            <div className="container">
+                <h1>Example of Cloud Storage</h1>
+                <p>
+                    First we have a form where the user can upload an image.
+                    Since we're using FaaS and our backend can not support files
+                    being sent to it, we will need to handle everything on the
+                    frontend. The first step to using a cloud storage solution
+                    is to validate that the client can actually upload images.
+                    This is something that happens at the start of every
+                    session. This authorization process has sensitive
+                    information so it will be handled on our backend.
+                </p>
+                <h2>File Upload Form</h2>
+                <ImageUploadForm onSubmit={uploadImage} />
+            </div>
+        </div>
     );
 }
 

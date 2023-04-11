@@ -1,5 +1,5 @@
 #!/bin/bash
-./b2-windows.exe update-bucket --corsRules '[
+./b2-windows.exe create-bucket --corsRules '[
     {
         "corsRuleName": "downloadFromAnyOriginWithUpload",
         "allowedOrigins": [
@@ -20,4 +20,4 @@
         ],
         "maxAgeSeconds": 3600
     }
-]' clothing-tracker allPublic
+]' <your-bucket-name> allPublic
