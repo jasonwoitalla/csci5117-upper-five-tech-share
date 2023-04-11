@@ -22,6 +22,47 @@ Just copy and paste our code for your own need for the project
 
 ## 2. Image Resizing / Image manipulation
 
+Client side image manipulation is limited, but resizing user inputs can be very important.
+
+For our case we will be using [react-image-file-resizer](https://www.npmjs.com/package/react-image-file-resizer)
+
+Install the package 
+```bash
+npm i react-image-file-resizer
+```
+
+Include the package in your module
+```javascript
+import Resizer from "react-image-file-resizer";
+```
+
+At this point a function can be created to handle file uploading, this will wrap the 'imageFileResizer' function.
+```javascript
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+
+    Resizer.imageFileResizer(
+      file,   //file name
+      300,    //max pixel width
+      300,    //max pixel height
+      'JPEG', //compression format
+      100,    //quality
+      0,      //rotation
+      (resizedFile) => {  //URI Callback function
+        // - Your URI handling function here -
+        setResizedImage(URL.createObjectURL(resizedFile));
+      },
+      'file'  //output type
+      100,    //min pixel width [optional]
+      100,    //min pixel height [optional]
+    );
+  };
+```
+### Examples
+   - A complete but basic example can be found at [src/pages/process-photo.js](https://github.com/jasonwoitalla/csci5117-upper-five-tech-share/blob/2b376f4627c45aee768dc6792b996f8d8875fcab/src/pages/process-photo.js#L8)
+   - An example with a Try-Catch check and slightly different URI handeling can be found at [src/pages/gallery.js](https://github.com/jasonwoitalla/csci5117-upper-five-tech-share/blob/2b376f4627c45aee768dc6792b996f8d8875fcab/src/pages/gallery.js#L15)
+
+
 ## 4. Using Cloud Storage
 
 Intro: Cloud storage is the industry standard way of saving / downloading images and there are a lot of services our there. The good news is that interacting with their api is about the same for every service.
