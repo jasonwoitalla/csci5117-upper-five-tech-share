@@ -252,16 +252,16 @@ Deleting is very similar and can be done by following the [Backblze Delete FIle 
 
 ### Pros / Cons: Base64
 
-#### Pros: Light Weight / Easy to integrate into existing web applications
-#### Cons: Inefficient, but for larger images it can be more efficient that making http request
+- Pros: Light Weight / Easy to integrate into existing web applications
+- Cons: Inefficient, but for larger images it can be more efficient that making http request
 
 ### Pros / Cons: Cloud
 
-#### Pros: Faster and more efficient. Scalable and reliable.
-#### Cons: Requires additional set up and maintenance.
+- Pros: Faster and more efficient. Scalable and reliable.
+- Cons: Requires additional set up and maintenance.
 
 
-### When to use
+## Conclusion: 
 
 - Cloud: Default 
 - Base64: For small thumbnails/images
