@@ -54,9 +54,11 @@ function GalleryGrid({ refresh, page = 1, displayNum = 100 }) {
 
                 const urlArray = [];
                 files.forEach((file) => {
-                    urlArray.push(
-                        `${downloadData.downloadUrl}/b2api/v2/b2_download_file_by_id?fileId=${file.id}`
-                    );
+                    if (file.id !== "undefined") {
+                        urlArray.push(
+                            `${downloadData.downloadUrl}/b2api/v2/b2_download_file_by_id?fileId=${file.id}`
+                        );
+                    }
                 });
                 setDownloadUrls(urlArray);
             });
