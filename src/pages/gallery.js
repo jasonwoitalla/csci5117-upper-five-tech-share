@@ -20,11 +20,6 @@ function Gallery() {
     // States
     const [refresh, setRefresh] = useState(false);
 
-    // Router Stuff
-    const router = useRouter();
-    const { page } = router.query;
-    const imagePerPage = 24;
-
     async function handleImageUpload(e) {
         e.preventDefault();
 
@@ -90,7 +85,10 @@ function Gallery() {
                             application! Powered by next.js, coodehooks, and
                             Backblaze S2.
                         </p>
-                        <ImageUploadForm onSubmit={handleImageUpload} />
+                        <ImageUploadForm
+                            onSubmit={handleImageUpload}
+                            reset={refresh}
+                        />
                         <h2 className="title is-4 mt-4">Screenshot Widget</h2>
                         <Webcam
                             audio={false}
@@ -110,103 +108,8 @@ function Gallery() {
                             </button>
                         </div>
                         <h2 className="title is-4 mt-4">Gallery</h2>
-                        <GalleryGrid
-                            refresh={refresh}
-                            page={page}
-                            displayNum={imagePerPage}
-                        />
+                        <GalleryGrid refresh={refresh} />
                     </div>
-                    <nav
-                        className="pagination is-large is-centered mt-6"
-                        role="navigation"
-                        aria-label="pagination"
-                    >
-                        <Link
-                            href={`/gallery?page=${parseInt(page) - 1}`}
-                            className="pagination-previous"
-                        >
-                            Previous
-                        </Link>
-                        <Link
-                            href={`/gallery?page=${parseInt(page) + 1}`}
-                            className="pagination-next"
-                        >
-                            Next page
-                        </Link>
-                        <ul className="pagination-list">
-                            <li
-                                style={{
-                                    display: page === "1" ? "none" : "",
-                                }}
-                            >
-                                <Link
-                                    href={`/gallery?page=1`}
-                                    className="pagination-link"
-                                    aria-label="Goto page 1"
-                                >
-                                    1
-                                </Link>
-                            </li>
-                            <li
-                                style={{
-                                    display: page === "1" ? "none" : "",
-                                }}
-                            >
-                                <span className="pagination-ellipsis">
-                                    &hellip;
-                                </span>
-                            </li>
-                            <li
-                                style={{
-                                    display:
-                                        page === "1" || page === "2"
-                                            ? "none"
-                                            : "",
-                                }}
-                            >
-                                <Link
-                                    href={`/gallery?page=${parseInt(page) - 1}`}
-                                    className="pagination-link"
-                                    aria-label={`Goto page ${
-                                        parseInt(page) - 1
-                                    }`}
-                                >
-                                    {parseInt(page) - 1}
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href={`/gallery?page=${parseInt(page)}`}
-                                    className="pagination-link is-current"
-                                    aria-label={`Goto page ${parseInt(page)}`}
-                                >
-                                    {parseInt(page)}
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href={`/gallery?page=${parseInt(page) + 1}`}
-                                    className="pagination-link"
-                                    aria-label={`Goto page ${
-                                        parseInt(page) + 1
-                                    }`}
-                                >
-                                    {parseInt(page) + 1}
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href={`/gallery?page=${parseInt(page) + 2}`}
-                                    className="pagination-link"
-                                    aria-label={`Goto page ${
-                                        parseInt(page) + 2
-                                    }`}
-                                >
-                                    {parseInt(page) + 2}
-                                </Link>
-                            </li>
-                        </ul>
-                    </nav>
                 </div>
             </main>
         </>

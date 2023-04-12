@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useCloudDownloads } from "@/hooks/useCloudStorage";
 import Image from "next/image";
+import useSWR from "swr";
 
 const CODEHOOKS_URL = process.env.NEXT_PUBLIC_API_URL;
 const CODEHOOKS_KEY = process.env.NEXT_PUBLIC_API_KEY;
@@ -8,6 +9,22 @@ const CODEHOOKS_KEY = process.env.NEXT_PUBLIC_API_KEY;
 function GalleryGrid({ refresh, page = 1, displayNum = 100 }) {
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [downloadUrls, setDownloadUrls] = useState(null);
+    const [fileData, setFileData] = useState(null);
+
+    const fetcher = async (urls) => {
+        const dataPromises = urls.map((url) => fetch(url));
+        const data = await Promise.all(dataPromises);
+
+        const blobPromises = data.map((blob) => blob.blob());
+        const blobs = await Promise.all(blobPromises);
+
+        const srcPromises = blobs.map((blob) => URL.createObjectURL(blob));
+        const srcs = await Promise.all(srcPromises);
+
+        return srcs;
+    };
+    const { data } = useSWR(downloadUrls, fetcher);
 
     async function fetchImages() {
         setLoading(true);
@@ -33,11 +50,7 @@ function GalleryGrid({ refresh, page = 1, displayNum = 100 }) {
             .then((res) => res.json())
             .then(async (files) => {
                 console.log("Finished downloading everything");
-
-                // Pagination
-                const start = (page - 1) * displayNum;
-                const end = start + displayNum;
-                files = files.slice(start, end);
+                setFileData(files);
 
                 const urlArray = [];
                 files.forEach((file) => {
@@ -45,19 +58,7 @@ function GalleryGrid({ refresh, page = 1, displayNum = 100 }) {
                         `${downloadData.downloadUrl}/b2api/v2/b2_download_file_by_id?fileId=${file.id}`
                     );
                 });
-                let myImages = [];
-                const srcFiles = await useCloudDownloads(urlArray);
-                srcFiles.forEach((srcFile, index) => {
-                    myImages.push({
-                        imgName: files[index].name,
-                        id: files[index]._id,
-                        src: srcFile,
-                        key: files[index]._id,
-                    });
-
-                    setLoading(false);
-                    setImages(myImages);
-                });
+                setDownloadUrls(urlArray);
             });
     }
 
@@ -68,6 +69,23 @@ function GalleryGrid({ refresh, page = 1, displayNum = 100 }) {
     useEffect(() => {
         fetchImages();
     }, [refresh]);
+
+    useEffect(() => {
+        if (data) {
+            let myImages = [];
+            data.forEach((srcFile, index) => {
+                myImages.push({
+                    imgName: fileData[index].name,
+                    id: fileData[index]._id,
+                    src: srcFile,
+                    key: fileData[index]._id,
+                });
+
+                setLoading(false);
+                setImages(myImages);
+            });
+        }
+    }, [data]);
 
     if (loading) {
         return <div>Loading...</div>;

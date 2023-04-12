@@ -1,19 +1,23 @@
 # Image upload/manipulation and Storage
 
+Demo Page: [Team Upper Five Demo Page](https://cosmic-figolla-fc64de.netlify.app/)
+
 ## Problem:
 
 -   You need to build an app that allow users to upload their image
 
-Ex) <br/> 
-Project 2: Online wardrobe, Pen tracker <br/> 
+Ex) <br/>
+Project 2: Online wardrobe, Pen tracker <br/>
 Industry: Social Media (Instagram), Online marketplace (ebay), etc
 
 Booktalk gave us a AWESOME presentation for uploading images
 
-### HOWEVER... 
+### HOWEVER...
+
 ### Question that might arise
--   How do you manipulate image??? 
--   How do we STORE data??? 
+
+-   How do you manipulate image???
+-   How do we STORE data???
 
 ## WE GOT ANSEWER
 
@@ -29,17 +33,20 @@ Client side image manipulation is limited, but resizing user inputs can be very 
 
 For our case we will be using [react-image-file-resizer](https://www.npmjs.com/package/react-image-file-resizer)
 
-Install the package 
+Install the package
+
 ```bash
 npm i react-image-file-resizer
 ```
 
 Include the package in your module
+
 ```javascript
 import Resizer from "react-image-file-resizer";
 ```
 
 At this point a function can be created to handle file uploading, this will wrap the 'imageFileResizer' function.
+
 ```javascript
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -61,9 +68,10 @@ At this point a function can be created to handle file uploading, this will wrap
     );
   };
 ```
+
 ### Examples
-   - A complete but basic example can be found at [src/pages/process-photo.js](https://github.com/jasonwoitalla/csci5117-upper-five-tech-share/blob/2b376f4627c45aee768dc6792b996f8d8875fcab/src/pages/process-photo.js#L8)
-   - An example with a Try-Catch check and slightly different URI handeling can be found at [src/pages/gallery.js](https://github.com/jasonwoitalla/csci5117-upper-five-tech-share/blob/2b376f4627c45aee768dc6792b996f8d8875fcab/src/pages/gallery.js#L15)
+-   A complete but basic example can be found at [src/pages/process-photo.js](https://github.com/jasonwoitalla/csci5117-upper-five-tech-share/blob/2b376f4627c45aee768dc6792b996f8d8875fcab/src/pages/process-photo.js#L8)
+-   An example with a Try-Catch check and slightly different URI handeling can be found at [src/pages/gallery.js](https://github.com/jasonwoitalla/csci5117-upper-five-tech-share/blob/2b376f4627c45aee768dc6792b996f8d8875fcab/src/pages/gallery.js#L15)
 
 ## 2. Base64 Image Uploading
 According to [Wikipedia](https://en.wikipedia.org/wiki/Base64), Base64 is binary-to-text encoding scheme to represent binary data in sequences of four Base64 digits (6-bit each).
@@ -90,7 +98,7 @@ The response provides us with an `_id` field which we can use to make a GET requ
 
 Finally we can set an ```<img>``` tag's ``src`` field with the retrieved base64 string from the GET request.
 
-## 4. Using Cloud Storage
+## 3. Using Cloud Storage
 
 Intro: Cloud storage is the industry standard way of saving / downloading images and there are a lot of services our there. The good news is that interacting with their api is about the same for every service.
 First step is to pick a service. For CSCI 5117 I would probably stick with one these two options:
@@ -274,18 +282,17 @@ Deleting is very similar and can be done by following the [Backblze Delete FIle 
 
 ### Pros / Cons: Base64
 
-#### Pros: Light Weight / Easy to integrate into existing web applications
-#### Cons: Inefficient, but for larger images it can be more efficient that making http request
+-   Pros: Light Weight / Easy to integrate into existing web applications
+-   Cons: Inefficient, but for larger images it can be more efficient that making http request
 
 ### Pros / Cons: Cloud
 
-#### Pros: Faster and more efficient. Scalable and reliable.
-#### Cons: Requires additional set up and maintenance.
+-   Pros: Faster and more efficient. Scalable and reliable.
+-   Cons: Requires additional set up and maintenance.
 
+## Conclusion:
 
-### When to use
+-   Cloud: Default
+-   Base64: For small thumbnails/images
 
-- Cloud: Default 
-- Base64: For small thumbnails/images
-
-HOWEVER, for this project you should be fine just by using Base 64. 
+HOWEVER, for this project you should be fine just by using Base 64.

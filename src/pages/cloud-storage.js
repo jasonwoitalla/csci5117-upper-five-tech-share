@@ -1,17 +1,35 @@
 import ImageUploadForm from "@/components/image-upload-form";
-import { useCloudUpload } from "@/hooks/useCloudStorage";
-import { useEffect } from "react";
+import {
+    useCloudUpload,
+    useCloudDownloadLatest,
+} from "@/hooks/useCloudStorage";
+import Image from "next/image";
+import { useState, useEffect } from "react";
 
 function cloudStorage() {
+    const [uploaded, setUploaded] = useState(false);
+    const [image, setImage] = useState(<span>Loading...</span>);
+
     async function uploadImage(e) {
         e.preventDefault();
 
         const image = document.getElementById("imageField").files[0];
         let uploadRes = await useCloudUpload(image);
-
-        console.log("Finishing upload");
-        console.log(uploadRes);
+        setUploaded(!uploaded);
     }
+
+    async function downloadImage() {
+        const src = await useCloudDownloadLatest();
+        setImage(<Image src={src} width={500} height={500} />);
+    }
+
+    useEffect(() => {
+        downloadImage();
+    }, []);
+
+    useEffect(() => {
+        downloadImage();
+    }, [uploaded]);
 
     return (
         <div className="section">
@@ -28,7 +46,9 @@ function cloudStorage() {
                     information so it will be handled on our backend.
                 </p>
                 <h2>File Upload Form</h2>
-                <ImageUploadForm onSubmit={uploadImage} />
+                <ImageUploadForm onSubmit={uploadImage} reset={uploaded} />
+                <h2 className="title is-3 mt-4">Last Uploaded Image</h2>
+                {image}
             </div>
         </div>
     );
