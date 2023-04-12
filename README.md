@@ -282,7 +282,7 @@ Deleting is very similar and can be done by following the [Backblze Delete FIle 
 ### Pros / Cons: Base64
 
 -   Pros: Light Weight / Easy to integrate into existing web applications (no third party)
--   Cons: Inefficient, 33% increase in image size (due to encoding)
+-   Cons: Inefficient, 33% increase in image size (due to encoding) <br/>
 Note: But for larger images it can be more efficient that making http request
 
 ### Pros / Cons: Cloud (Amazon S3, BackBlaze)
@@ -304,7 +304,7 @@ Base64: Way to represent binary data (such as images) as text, which can then be
 Cloud: Uploading the image file to a remote server such as Amazon S3, Google Cloud Storage, or Microsoft Azure Blob Storage.
 
 WHEN? 
--   Cloud: Default
+-   Cloud: Default <br/>
 -   Base64: For small thumbnails/images
 
 HOWEVER, for this project you should be fine just by using Base 64.
