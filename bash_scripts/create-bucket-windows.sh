@@ -1,4 +1,6 @@
 #!/bin/bash
+./b2-windows.exe authorize-account <your-account-key-id> <your-application-key>
+
 ./b2-windows.exe create-bucket --corsRules '[
     {
         "corsRuleName": "downloadFromAnyOriginWithUpload",
@@ -21,3 +23,4 @@
         "maxAgeSeconds": 3600
     }
 ]' <your-bucket-name> allPublic
+read -p "Press enter to continue"
