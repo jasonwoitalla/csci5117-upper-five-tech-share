@@ -22,8 +22,8 @@ Booktalk gave us a AWESOME presentation for uploading images
 ## WE GOT ANSEWER
 
 #### Architecture Overview
+![Tech Share (1)](https://user-images.githubusercontent.com/65479968/231504366-b7e2abdf-6337-4543-8b18-986d67b8c144.png)
 
-![Tech Share (1)](https://user-images.githubusercontent.com/65479968/230800447-d9de666f-94ec-40c1-b0ae-cd4c9645068c.png)
 
 Just copy and paste our code for your own need for the project
 
@@ -282,16 +282,29 @@ Deleting is very similar and can be done by following the [Backblze Delete FIle 
 
 ### Pros / Cons: Base64
 
--   Pros: Light Weight / Easy to integrate into existing web applications
--   Cons: Inefficient, but for larger images it can be more efficient that making http request
+-   Pros: Light Weight / Easy to integrate into existing web applications (no third party)
+-   Cons: Inefficient, 33% increase in image size (due to encoding)
+Note: But for larger images it can be more efficient that making http request
 
-### Pros / Cons: Cloud
+### Pros / Cons: Cloud (Amazon S3, BackBlaze)
 
 -   Pros: Faster and more efficient. Scalable and reliable.
 -   Cons: Requires additional set up and maintenance.
 
+## Industry Example:
+
+#### Base 64:
+<img width="1028" alt="Screen Shot 2023-04-11 at 8 17 11 PM" src="https://user-images.githubusercontent.com/65479968/231507836-973b42fd-a334-48ab-9bb1-38ed6eeb74b5.png">
+
+
+#### Cloud: EveryWhere 
+
 ## Conclusion:
 
+Base64: Way to represent binary data (such as images) as text, which can then be transmitted over text-based channels such as HTTP
+Cloud: Uploading the image file to a remote server such as Amazon S3, Google Cloud Storage, or Microsoft Azure Blob Storage.
+
+WHEN? 
 -   Cloud: Default
 -   Base64: For small thumbnails/images
 
