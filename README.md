@@ -23,9 +23,7 @@ Booktalk gave us a AWESOME presentation for uploading images
 
 Just copy and paste our code for your own need for the project
 
-## 1. Image Uploading
-
-## 2. Image Resizing / Image manipulation
+## 1. Image Resizing / Image manipulation
 
 Client side image manipulation is limited, but resizing user inputs can be very important.
 
@@ -67,6 +65,30 @@ At this point a function can be created to handle file uploading, this will wrap
    - A complete but basic example can be found at [src/pages/process-photo.js](https://github.com/jasonwoitalla/csci5117-upper-five-tech-share/blob/2b376f4627c45aee768dc6792b996f8d8875fcab/src/pages/process-photo.js#L8)
    - An example with a Try-Catch check and slightly different URI handeling can be found at [src/pages/gallery.js](https://github.com/jasonwoitalla/csci5117-upper-five-tech-share/blob/2b376f4627c45aee768dc6792b996f8d8875fcab/src/pages/gallery.js#L15)
 
+## 2. Base64 Image Uploading
+According to [Wikipedia](https://en.wikipedia.org/wiki/Base64), Base64 is binary-to-text encoding scheme to represent binary data in sequences of four Base64 digits (6-bit each).
+
+Once we have an image uploaded in the front end, we can use ``FileReader`` to encode our image blob to a Base64 url.
+```javascript
+    const fileInput = document.getElementById('imageField'); 
+    const upload_imaged = fileInput.files[0];  // get the file from font-end
+    let reader = new FileReader();
+    reader.onloadend = function() {     // call back to set your state variables
+        setDataUrl(reader.result);      // save the result in the state dataUrl
+        // your business logic
+    }
+    reader.readAsDataURL(upload_imaged);   
+```
+We can make a POST request to the codehookds endpoint. We set up ours to accept `ENDPOINT/images` to accept `name` and `content` which are both strings
+```javascript
+    const imageYup = object({
+        name: string().required(),
+        content: string().required(),
+    });
+```
+The response provides us with an `_id` field which we can use to make a GET request to `ENDPOINT/images/_ID` to get image json
+
+Finally we can set an ```<img>``` tag's ``src`` field with the retrieved base64 string from the GET request.
 
 ## 4. Using Cloud Storage
 
