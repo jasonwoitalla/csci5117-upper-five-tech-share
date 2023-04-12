@@ -1,4 +1,4 @@
-# Image upload/manipulation and Storage
+# Image manipulation and Storage
 
 Demo Page: [Team Upper Five Demo Page](https://cosmic-figolla-fc64de.netlify.app/)
 
@@ -10,14 +10,13 @@ Ex) <br/>
 Project 2: Online wardrobe, Pen tracker <br/>
 Industry: Social Media (Instagram), Online marketplace (ebay), etc
 
-Booktalk gave us a AWESOME presentation for uploading images
+On Monday, Booktok gave us a AWESOME presentation for uploading images 
 
 ### HOWEVER...
-
 ### Question that might arise
 
 -   How do you manipulate image???
--   How do we STORE data???
+-   Most importantly, how do we STORE data???
 
 ## WE GOT ANSEWER
 
