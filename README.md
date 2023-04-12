@@ -283,7 +283,6 @@ Deleting is very similar and can be done by following the [Backblze Delete FIle 
 
 -   Pros: Light Weight / Easy to integrate into existing web applications (no third party)
 -   Cons: Inefficient, 33% increase in image size (due to encoding) <br/>
-Note: But for larger images it can be more efficient that making http request
 
 ### Pros / Cons: Cloud (Amazon S3, BackBlaze)
 
